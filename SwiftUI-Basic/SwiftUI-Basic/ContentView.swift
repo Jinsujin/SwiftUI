@@ -9,6 +9,12 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
+        Text("Hello SwiftUI")
+    }
+}
+
+struct ButtonView: View {
+    var body: some View {
         Button {
             print("hello")
         } label: {
@@ -22,6 +28,7 @@ struct ContentView: View {
         }
     }
 }
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
