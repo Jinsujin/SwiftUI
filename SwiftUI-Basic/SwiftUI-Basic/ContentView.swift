@@ -9,8 +9,17 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        Button {
+            print("hello")
+        } label: {
+            HStack {
+                Image(systemName: "folder")
+                    .resizable()
+                    .frame(width: 80, height: 60, alignment: .center)
+                Text("Save File")
+                    .foregroundColor(.brown)
+            }
+        }
     }
 }
 
