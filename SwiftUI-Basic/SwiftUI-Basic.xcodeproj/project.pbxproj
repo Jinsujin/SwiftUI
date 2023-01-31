@@ -15,6 +15,9 @@
 		989A8F9F29431F3E001F3222 /* SwiftUI_BasicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989A8F9E29431F3E001F3222 /* SwiftUI_BasicTests.swift */; };
 		989A8FA929431F3E001F3222 /* SwiftUI_BasicUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989A8FA829431F3E001F3222 /* SwiftUI_BasicUITests.swift */; };
 		989A8FAB29431F3E001F3222 /* SwiftUI_BasicUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989A8FAA29431F3E001F3222 /* SwiftUI_BasicUITestsLaunchTests.swift */; };
+		98E1650D2988BF6D0068D2F3 /* MyButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E1650C2988BF6D0068D2F3 /* MyButtonView.swift */; };
+		98E165122988BFD80068D2F3 /* MyTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E165112988BFD80068D2F3 /* MyTextView.swift */; };
+		98E165152988C00A0068D2F3 /* MyImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E165142988C00A0068D2F3 /* MyImageView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +49,9 @@
 		989A8FA429431F3E001F3222 /* SwiftUI-BasicUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SwiftUI-BasicUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		989A8FA829431F3E001F3222 /* SwiftUI_BasicUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUI_BasicUITests.swift; sourceTree = "<group>"; };
 		989A8FAA29431F3E001F3222 /* SwiftUI_BasicUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUI_BasicUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		98E1650C2988BF6D0068D2F3 /* MyButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyButtonView.swift; sourceTree = "<group>"; };
+		98E165112988BFD80068D2F3 /* MyTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTextView.swift; sourceTree = "<group>"; };
+		98E165142988C00A0068D2F3 /* MyImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyImageView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +110,10 @@
 		989A8F8C29431F3C001F3222 /* SwiftUI-Basic */ = {
 			isa = PBXGroup;
 			children = (
+				98E165132988BFF50068D2F3 /* Text */,
+				98E1650F2988BF990068D2F3 /* Button */,
+				98E1650E2988BF730068D2F3 /* Image */,
+				98E165102988BFA40068D2F3 /* Stack */,
 				9837365F2983CD3100EBD988 /* Fonts */,
 				989A8F8D29431F3C001F3222 /* SwiftUI_BasicApp.swift */,
 				989A8F8F29431F3C001F3222 /* ContentView.swift */,
@@ -136,6 +146,37 @@
 				989A8FAA29431F3E001F3222 /* SwiftUI_BasicUITestsLaunchTests.swift */,
 			);
 			path = "SwiftUI-BasicUITests";
+			sourceTree = "<group>";
+		};
+		98E1650E2988BF730068D2F3 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				98E165142988C00A0068D2F3 /* MyImageView.swift */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
+		98E1650F2988BF990068D2F3 /* Button */ = {
+			isa = PBXGroup;
+			children = (
+				98E1650C2988BF6D0068D2F3 /* MyButtonView.swift */,
+			);
+			path = Button;
+			sourceTree = "<group>";
+		};
+		98E165102988BFA40068D2F3 /* Stack */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Stack;
+			sourceTree = "<group>";
+		};
+		98E165132988BFF50068D2F3 /* Text */ = {
+			isa = PBXGroup;
+			children = (
+				98E165112988BFD80068D2F3 /* MyTextView.swift */,
+			);
+			path = Text;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -269,7 +310,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98E165152988C00A0068D2F3 /* MyImageView.swift in Sources */,
 				989A8F9029431F3C001F3222 /* ContentView.swift in Sources */,
+				98E165122988BFD80068D2F3 /* MyTextView.swift in Sources */,
+				98E1650D2988BF6D0068D2F3 /* MyButtonView.swift in Sources */,
 				989A8F8E29431F3C001F3222 /* SwiftUI_BasicApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
