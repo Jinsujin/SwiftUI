@@ -18,6 +18,7 @@
 		98E1650D2988BF6D0068D2F3 /* MyButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E1650C2988BF6D0068D2F3 /* MyButtonView.swift */; };
 		98E165122988BFD80068D2F3 /* MyTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E165112988BFD80068D2F3 /* MyTextView.swift */; };
 		98E165152988C00A0068D2F3 /* MyImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E165142988C00A0068D2F3 /* MyImageView.swift */; };
+		98E165172988CB1F0068D2F3 /* MyStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E165162988CB1E0068D2F3 /* MyStackView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		98E1650C2988BF6D0068D2F3 /* MyButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyButtonView.swift; sourceTree = "<group>"; };
 		98E165112988BFD80068D2F3 /* MyTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTextView.swift; sourceTree = "<group>"; };
 		98E165142988C00A0068D2F3 /* MyImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyImageView.swift; sourceTree = "<group>"; };
+		98E165162988CB1E0068D2F3 /* MyStackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyStackView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +169,7 @@
 		98E165102988BFA40068D2F3 /* Stack */ = {
 			isa = PBXGroup;
 			children = (
+				98E165162988CB1E0068D2F3 /* MyStackView.swift */,
 			);
 			path = Stack;
 			sourceTree = "<group>";
@@ -315,6 +318,7 @@
 				98E165122988BFD80068D2F3 /* MyTextView.swift in Sources */,
 				98E1650D2988BF6D0068D2F3 /* MyButtonView.swift in Sources */,
 				989A8F8E29431F3C001F3222 /* SwiftUI_BasicApp.swift in Sources */,
+				98E165172988CB1F0068D2F3 /* MyStackView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
