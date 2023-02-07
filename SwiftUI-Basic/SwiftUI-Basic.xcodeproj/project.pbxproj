@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		983736612983CD7A00EBD988 /* Jost-VariableFont_wght.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 983736602983CD7A00EBD988 /* Jost-VariableFont_wght.ttf */; };
+		98991EB62992788A00A2115A /* MyScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98991EB52992788A00A2115A /* MyScrollView.swift */; };
+		98991EB929927E0500A2115A /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98991EB829927E0500A2115A /* ListView.swift */; };
+		98991EBC299288E100A2115A /* MySection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98991EBB299288E100A2115A /* MySection.swift */; };
 		989A8F8E29431F3C001F3222 /* SwiftUI_BasicApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989A8F8D29431F3C001F3222 /* SwiftUI_BasicApp.swift */; };
 		989A8F9029431F3C001F3222 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 989A8F8F29431F3C001F3222 /* ContentView.swift */; };
 		989A8F9229431F3E001F3222 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 989A8F9129431F3E001F3222 /* Assets.xcassets */; };
@@ -40,6 +43,9 @@
 
 /* Begin PBXFileReference section */
 		983736602983CD7A00EBD988 /* Jost-VariableFont_wght.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Jost-VariableFont_wght.ttf"; sourceTree = "<group>"; };
+		98991EB52992788A00A2115A /* MyScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyScrollView.swift; sourceTree = "<group>"; };
+		98991EB829927E0500A2115A /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		98991EBB299288E100A2115A /* MySection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MySection.swift; sourceTree = "<group>"; };
 		989A8F8A29431F3C001F3222 /* SwiftUI-Basic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SwiftUI-Basic.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		989A8F8D29431F3C001F3222 /* SwiftUI_BasicApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUI_BasicApp.swift; sourceTree = "<group>"; };
 		989A8F8F29431F3C001F3222 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -89,6 +95,31 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		98991EB42992786F00A2115A /* Scroll */ = {
+			isa = PBXGroup;
+			children = (
+				98991EB52992788A00A2115A /* MyScrollView.swift */,
+			);
+			path = Scroll;
+			sourceTree = "<group>";
+		};
+		98991EB729927DF400A2115A /* List */ = {
+			isa = PBXGroup;
+			children = (
+				98991EBA299288C800A2115A /* Section */,
+				98991EB829927E0500A2115A /* ListView.swift */,
+			);
+			path = List;
+			sourceTree = "<group>";
+		};
+		98991EBA299288C800A2115A /* Section */ = {
+			isa = PBXGroup;
+			children = (
+				98991EBB299288E100A2115A /* MySection.swift */,
+			);
+			path = Section;
+			sourceTree = "<group>";
+		};
 		989A8F8129431F3C001F3222 = {
 			isa = PBXGroup;
 			children = (
@@ -112,6 +143,8 @@
 		989A8F8C29431F3C001F3222 /* SwiftUI-Basic */ = {
 			isa = PBXGroup;
 			children = (
+				98991EB729927DF400A2115A /* List */,
+				98991EB42992786F00A2115A /* Scroll */,
 				98E165132988BFF50068D2F3 /* Text */,
 				98E1650F2988BF990068D2F3 /* Button */,
 				98E1650E2988BF730068D2F3 /* Image */,
@@ -313,12 +346,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98991EB929927E0500A2115A /* ListView.swift in Sources */,
 				98E165152988C00A0068D2F3 /* MyImageView.swift in Sources */,
+				98991EBC299288E100A2115A /* MySection.swift in Sources */,
 				989A8F9029431F3C001F3222 /* ContentView.swift in Sources */,
 				98E165122988BFD80068D2F3 /* MyTextView.swift in Sources */,
 				98E1650D2988BF6D0068D2F3 /* MyButtonView.swift in Sources */,
 				989A8F8E29431F3C001F3222 /* SwiftUI_BasicApp.swift in Sources */,
 				98E165172988CB1F0068D2F3 /* MyStackView.swift in Sources */,
+				98991EB62992788A00A2115A /* MyScrollView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
