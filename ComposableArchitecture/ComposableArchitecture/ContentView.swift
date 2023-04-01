@@ -39,6 +39,24 @@ private func ordinal(_ n: Int) -> String {
 class AppState: ObservableObject {
     @Published var count = 0
     @Published var favoritePrimes: [Int] = []
+    @Published var loggedInUser: User? = nil
+    @Published var activityFeed: [Activity] = []
+    
+    struct Activity {
+        let timestamp: Date
+        let type: ActivityType
+        
+        enum ActivityType {
+            case addedFavoritePrime(Int)
+            case removedFavoritePrime(Int)
+        }
+    }
+    
+    struct User {
+        let id: Int
+        let name: String
+        let bio: String
+    }
 }
 
 struct PrimeAlert: Identifiable {
@@ -122,15 +140,15 @@ struct IsPrimeModalView: View {
                 Text("\(state.count) is Prime!")
                 if state.favoritePrimes.contains(self.state.count) {
                     Button {
-                        state.favoritePrimes
-                            .removeAll(where: { $0 == self.state.count })
+                        self.state.favoritePrimes.removeAll(where: { $0 == self.state.count })
+                        self.state.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(self.state.count)))
                     } label: {
                         Text("Remove favorite primes")
                     }
                 } else {
                     Button {
-                        state.favoritePrimes
-                            .append(self.state.count)
+                        self.state.favoritePrimes.append(self.state.count)
+                        self.state.activityFeed.append(.init(timestamp: Date(), type: .addedFavoritePrime(self.state.count)))
                     } label: {
                         Text("Save favorite primes")
                     }
@@ -162,21 +180,23 @@ struct WolframAlphaResult: Decodable {
 
 // MARK: - FavoritePrimesView
 struct FavoritePrimesView: View {
-  @ObservedObject var state: AppState
-
-  var body: some View {
-    List {
-      ForEach(self.state.favoritePrimes, id: \.self) { prime in
-        Text("\(prime)")
-      }
-      .onDelete { indexSet in
-        for index in indexSet {
-          self.state.favoritePrimes.remove(at: index)
+    @ObservedObject var state: AppState
+    
+    var body: some View {
+        List {
+            ForEach(self.state.favoritePrimes, id: \.self) { prime in
+                Text("\(prime)")
+            }
+            .onDelete { indexSet in
+                for index in indexSet {
+                    let prime = self.state.favoritePrimes[index]
+                    self.state.favoritePrimes.remove(at: index)
+                    self.state.activityFeed.append(AppState.Activity(timestamp: Date(), type: .removedFavoritePrime(prime)))
+                }
+            }
         }
-      }
+        .navigationBarTitle(Text("Favorite Primes"))
     }
-      .navigationBarTitle(Text("Favorite Primes"))
-  }
 }
 
 // MARK: - wolframe API
