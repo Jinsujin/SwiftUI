@@ -10,7 +10,7 @@ struct ContentView: View {
                 NavigationLink(destination: CounterView(state: state)) {
                     Text("Counter Demo")
                 }
-                NavigationLink(destination: FavoritePrimesView(state: self.state)) {
+                NavigationLink(destination: FavoritePrimesView(state: self.$state.favoritePrimesState)) {
                     Text("Favorite primes")
                 }
             }
@@ -57,6 +57,21 @@ class AppState: ObservableObject {
         let name: String
         let bio: String
     }
+}
+
+extension AppState {
+  var favoritePrimesState: FavoritePrimesState {
+    get {
+      FavoritePrimesState(
+        favoritePrimes: self.favoritePrimes,
+        activityFeed: self.activityFeed
+      )
+    }
+    set {
+      self.favoritePrimes = newValue.favoritePrimes
+      self.activityFeed = newValue.activityFeed
+    }
+  }
 }
 
 struct PrimeAlert: Identifiable {
@@ -178,9 +193,16 @@ struct WolframAlphaResult: Decodable {
     }
 }
 
+
+struct FavoritePrimesState {
+  var favoritePrimes: [Int]
+  var activityFeed: [AppState.Activity]
+}
+
 // MARK: - FavoritePrimesView
 struct FavoritePrimesView: View {
-    @ObservedObject var state: AppState
+//    @ObservedObject var state: AppState
+    @Binding var state: FavoritePrimesState
     
     var body: some View {
         List {
