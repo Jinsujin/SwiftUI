@@ -10,8 +10,8 @@ struct ContentView: View {
                 NavigationLink(destination: CounterView(state: state)) {
                     Text("Counter Demo")
                 }
-                NavigationLink(destination: EmptyView()) {
-                    Text("Favorite Primes")
+                NavigationLink(destination: FavoritePrimesView(state: self.state)) {
+                    Text("Favorite primes")
                 }
             }
             .navigationTitle("State management")
@@ -160,6 +160,26 @@ struct WolframAlphaResult: Decodable {
     }
 }
 
+// MARK: - FavoritePrimesView
+struct FavoritePrimesView: View {
+  @ObservedObject var state: AppState
+
+  var body: some View {
+    List {
+      ForEach(self.state.favoritePrimes, id: \.self) { prime in
+        Text("\(prime)")
+      }
+      .onDelete { indexSet in
+        for index in indexSet {
+          self.state.favoritePrimes.remove(at: index)
+        }
+      }
+    }
+      .navigationBarTitle(Text("Favorite Primes"))
+  }
+}
+
+// MARK: - wolframe API
 private let wolframAlphaApiKey = "??"
 
 func wolframAlpha(query: String, callback: @escaping (WolframAlphaResult?) -> Void) -> Void {
@@ -197,11 +217,6 @@ func nthPrime(_ n: Int, callback: @escaping (Int?) -> Void) -> Void {
         )
     }
 }
-
-// Optional(15485863)
-//nthPrime(1_000_000) { p in // p == Int?
-//  print(p)
-//}
 
 
 struct ContentView_Previews: PreviewProvider {
