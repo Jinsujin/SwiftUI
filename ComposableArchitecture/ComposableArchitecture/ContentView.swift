@@ -2,7 +2,7 @@ import SwiftUI
 import Combine
 
 struct ContentView: View {
-    @ObservedObject var store: Store<AppState>
+    @ObservedObject var store: Store<AppState, CounterAction>
     
     var body: some View {
         NavigationView {
@@ -60,11 +60,17 @@ struct AppState {
 }
 
 // Store<AppState>
-final class Store<Value>: ObservableObject {
+final class Store<Value, Action>: ObservableObject {
+    let reducer: (Value, Action) -> Value
     @Published var value: Value
     
-    init(initialValue: Value) {
+    init(initialValue: Value, reducer: @escaping (Value, Action) -> Value) {
+        self.reducer = reducer
         self.value = initialValue
+    }
+    
+    func send(_ action: Action) {
+        self.value = self.reducer(self.value, action)
     }
 }
 
@@ -111,7 +117,7 @@ struct PrimeAlert: Identifiable {
 }
 
 struct CounterView: View {
-    @ObservedObject var store: Store<AppState>
+    @ObservedObject var store: Store<AppState, CounterAction>
     @State var isPrimeModalShown: Bool = false
     @State var alertNthPrime: PrimeAlert?
     @State var isNthPrimeButtonDisabled = false
@@ -120,15 +126,9 @@ struct CounterView: View {
         
         VStack {
             HStack {
-                Button("-") {
-                    self.store.value = counterReducer(state: self.store.value, action: .decrTapped)
-//                    self.store.value.count -= 1
-                }
+                Button("-") { self.store.send(.decrTapped) }
                 Text("\(self.store.value.count)")
-                Button("+") {
-                    self.store.value = counterReducer(state: self.store.value, action: .incrTapped)
-//                    self.store.value.count += 1
-                }
+                Button("+") { self.store.send(.incrTapped) }
             }
             
             Button(action: { self.isPrimeModalShown = true }) {
@@ -175,7 +175,7 @@ private func isPrime (_ p: Int) -> Bool {
 }
 
 struct IsPrimeModalView: View {
-    @ObservedObject var store: Store<AppState>
+    @ObservedObject var store: Store<AppState, CounterAction>
     
     var body: some View {
         VStack {
@@ -291,6 +291,9 @@ func nthPrime(_ n: Int, callback: @escaping (Int?) -> Void) -> Void {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(store: Store<AppState>(initialValue: AppState()))
+        ContentView(store: Store(
+            initialValue: AppState(),
+            reducer: counterReducer)
+        )
     }
 }
