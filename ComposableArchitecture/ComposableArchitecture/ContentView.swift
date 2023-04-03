@@ -74,6 +74,7 @@ final class Store<Value, Action>: ObservableObject {
     }
 }
 
+
 enum CounterAction {
     case decrTapped
     case incrTapped
@@ -93,16 +94,35 @@ enum AppAction {
     case favoritePrimes(FavoritPrimesAction)
 }
 
+func combine<Value, Action>(
+    _ reducers: (inout Value, Action) -> Void...
+) -> (inout Value, Action) -> Void {
+    return { value, action in
+        for reducer in reducers {
+            reducer(&value, action)
+        }
+    }
+}
 
-// 하려고 하는 바는 reduce 고차함수와 유사하다
-// action 이 들어오면, 현재 state 를 변경한 state 로 반환한다
-func appReducer(state: inout AppState, action: AppAction) {
+let appReducer = combine(
+    counterReducer,
+    primeModalReducer,
+    favoritePrimesReducer
+)
+
+func counterReducer(state: inout AppState, action: AppAction) {
     switch action {
     case .counter(.decrTapped):
         state.count -= 1
     case .counter(.incrTapped):
         state.count += 1
-        
+    default:
+        break
+    }
+}
+
+func primeModalReducer(state: inout AppState, action: AppAction) {
+    switch action {
     case .primeModal(.saveFavoritePrimeTapped):
         state.favoritePrimes.append(state.count)
         state.activityFeed.append(.init(timestamp: Date(), type: .addedFavoritePrime(state.count)))
@@ -110,13 +130,21 @@ func appReducer(state: inout AppState, action: AppAction) {
     case .primeModal(.removeFavoritePrimeTapped):
         state.favoritePrimes.removeAll(where: { $0 == state.count })
         state.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(state.count)))
-    
+    default:
+        break
+    }
+}
+
+func favoritePrimesReducer(state: inout AppState, action: AppAction) {
+    switch action {
     case let .favoritePrimes(.deleteFavoritePrimes(indexSet)):
         for index in indexSet {
             let prime = state.favoritePrimes[index]
             state.favoritePrimes.remove(at: index)
             state.activityFeed.append(AppState.Activity(timestamp: Date(), type: .removedFavoritePrime(prime)))
         }
+    default:
+        break
     }
 }
 
