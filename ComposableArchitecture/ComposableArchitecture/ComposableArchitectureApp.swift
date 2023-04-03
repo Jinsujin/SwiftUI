@@ -13,7 +13,7 @@ struct ComposableArchitectureApp: App {
         WindowGroup {
             ContentView(store: Store(
                 initialValue: AppState(),
-                reducer: counterReducer)
+                reducer: appReducer)
             )
         }
     }
