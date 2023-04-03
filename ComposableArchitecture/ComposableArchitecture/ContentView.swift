@@ -68,6 +68,27 @@ final class Store<Value>: ObservableObject {
     }
 }
 
+enum CounterAction {
+    case decrTapped
+    case incrTapped
+}
+
+
+// 하려고 하는 바는 reduce 고차함수와 유사하다
+// action 이 들어오면, 현재 state 를 변경한 state 로 반환한다
+func counterReducer(state: AppState, action: CounterAction) -> AppState {
+    var copy = state
+    switch action {
+    case .decrTapped:
+        copy.count -= 1
+        
+    case .incrTapped:
+        copy.count += 1
+    }
+    return copy
+}
+
+
 extension AppState {
   var favoritePrimesState: FavoritePrimesState {
     get {
@@ -99,9 +120,15 @@ struct CounterView: View {
         
         VStack {
             HStack {
-                Button("-") { self.store.value.count -= 1 }
+                Button("-") {
+                    self.store.value = counterReducer(state: self.store.value, action: .decrTapped)
+//                    self.store.value.count -= 1
+                }
                 Text("\(self.store.value.count)")
-                Button("+") { self.store.value.count += 1 }
+                Button("+") {
+                    self.store.value = counterReducer(state: self.store.value, action: .incrTapped)
+//                    self.store.value.count += 1
+                }
             }
             
             Button(action: { self.isPrimeModalShown = true }) {
