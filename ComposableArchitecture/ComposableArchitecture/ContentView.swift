@@ -2,15 +2,15 @@ import SwiftUI
 import Combine
 
 struct ContentView: View {
-    @ObservedObject var state: AppState
+    @ObservedObject var store: Store<AppState>
     
     var body: some View {
         NavigationView {
             List {
-                NavigationLink(destination: CounterView(state: state)) {
+                NavigationLink(destination: CounterView(store: self.store)) {
                     Text("Counter Demo")
                 }
-                NavigationLink(destination: FavoritePrimesView(state: self.$state.favoritePrimesState)) {
+                NavigationLink(destination: FavoritePrimesView(state: self.$store.value.favoritePrimesState)) {
                     Text("Favorite primes")
                 }
             }
@@ -36,11 +36,11 @@ private func ordinal(_ n: Int) -> String {
     return formatter.string(for: n) ?? ""
 }
 
-class AppState: ObservableObject {
-    @Published var count = 0
-    @Published var favoritePrimes: [Int] = []
-    @Published var loggedInUser: User? = nil
-    @Published var activityFeed: [Activity] = []
+struct AppState {
+    var count = 0
+    var favoritePrimes: [Int] = []
+    var loggedInUser: User? = nil
+    var activityFeed: [Activity] = []
     
     struct Activity {
         let timestamp: Date
@@ -56,6 +56,15 @@ class AppState: ObservableObject {
         let id: Int
         let name: String
         let bio: String
+    }
+}
+
+// Store<AppState>
+final class Store<Value>: ObservableObject {
+    @Published var value: Value
+    
+    init(initialValue: Value) {
+        self.value = initialValue
     }
 }
 
@@ -81,7 +90,7 @@ struct PrimeAlert: Identifiable {
 }
 
 struct CounterView: View {
-    @ObservedObject var state: AppState
+    @ObservedObject var store: Store<AppState>
     @State var isPrimeModalShown: Bool = false
     @State var alertNthPrime: PrimeAlert?
     @State var isNthPrimeButtonDisabled = false
@@ -90,17 +99,9 @@ struct CounterView: View {
         
         VStack {
             HStack {
-                Button {
-                    self.state.count -= 1
-                } label: {
-                    Text("-")
-                }
-                Text("\(self.state.count)")
-                Button {
-                    self.state.count += 1
-                } label: {
-                    Text("+")
-                }
+                Button("-") { self.store.value.count -= 1 }
+                Text("\(self.store.value.count)")
+                Button("+") { self.store.value.count += 1 }
             }
             
             Button(action: { self.isPrimeModalShown = true }) {
@@ -109,19 +110,19 @@ struct CounterView: View {
             Button {
                 nthPrimeButtonAction()
             } label: {
-                Text("What is the \(ordinal(self.state.count)) prime?")
+                Text("What is the \(ordinal(self.store.value.count)) prime?")
             }
             .disabled(self.isNthPrimeButtonDisabled)
         }
         .font(.title)
         .navigationTitle("Counter Demo")
         .sheet(isPresented: self.$isPrimeModalShown) {
-            IsPrimeModalView(state: self.state)
+            IsPrimeModalView(store: self.store)
         }
         // alertNthPrime 에 값이 있을때, alert 을 띄운다
         .alert(item: self.$alertNthPrime) { alert in
             Alert(
-                title: Text("The \(ordinal(self.state.count)) prime is \(alert.prime)"),
+                title: Text("The \(ordinal(self.store.value.count)) prime is \(alert.prime)"),
                 dismissButton: .default(Text("Ok"))
             )
         }
@@ -129,7 +130,7 @@ struct CounterView: View {
     
     func nthPrimeButtonAction() {
         self.isNthPrimeButtonDisabled = true
-        nthPrime(self.state.count) { prime in
+        nthPrime(self.store.value.count) { prime in
             print("response::", prime)
             self.alertNthPrime = prime.map(PrimeAlert.init(prime:))
             self.isNthPrimeButtonDisabled = false
@@ -147,29 +148,29 @@ private func isPrime (_ p: Int) -> Bool {
 }
 
 struct IsPrimeModalView: View {
-    @ObservedObject var state: AppState
+    @ObservedObject var store: Store<AppState>
     
     var body: some View {
         VStack {
-            if isPrime(state.count) {
-                Text("\(state.count) is Prime!")
-                if state.favoritePrimes.contains(self.state.count) {
+            if isPrime(self.store.value.count) {
+                Text("\(self.store.value.count) is Prime!")
+                if self.store.value.favoritePrimes.contains(self.store.value.count) {
                     Button {
-                        self.state.favoritePrimes.removeAll(where: { $0 == self.state.count })
-                        self.state.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(self.state.count)))
+                        self.store.value.favoritePrimes.removeAll(where: { $0 == self.store.value.count })
+                        self.store.value.activityFeed.append(.init(timestamp: Date(), type: .removedFavoritePrime(self.store.value.count)))
                     } label: {
                         Text("Remove favorite primes")
                     }
                 } else {
                     Button {
-                        self.state.favoritePrimes.append(self.state.count)
-                        self.state.activityFeed.append(.init(timestamp: Date(), type: .addedFavoritePrime(self.state.count)))
+                        self.store.value.favoritePrimes.append(self.store.value.count)
+                        self.store.value.activityFeed.append(.init(timestamp: Date(), type: .addedFavoritePrime(self.store.value.count)))
                     } label: {
                         Text("Save favorite primes")
                     }
                 }
             } else {
-                Text("\(state.count) is Not Prime....")
+                Text("\(self.store.value.count) is Not Prime....")
             }
         }
     }
@@ -263,6 +264,6 @@ func nthPrime(_ n: Int, callback: @escaping (Int?) -> Void) -> Void {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(state: AppState())
+        ContentView(store: Store<AppState>(initialValue: AppState()))
     }
 }
