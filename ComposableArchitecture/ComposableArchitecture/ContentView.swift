@@ -71,6 +71,22 @@ final class Store<Value, Action>: ObservableObject {
     
     func send(_ action: Action) {
         self.reducer(&self.value, action)
+        //      print("Action: \(action)")
+        //      print("Value:")
+        //      dump(self.value)
+        //      print("---")
+    }
+}
+
+func logging<Value, Action>(
+    _ reducer: @escaping (inout Value, Action) -> Void
+) -> (inout Value, Action) -> Void {
+    return { value ,action in
+        reducer(&value, action)
+        print("Action: \(action)")
+        print("Value:")
+        dump(value)
+        print("---")
     }
 }
 
@@ -94,38 +110,40 @@ enum AppAction {
     case favoritePrimes(FavoritPrimesAction)
     
     var counter: CounterAction? {
-      get {
-        guard case let .counter(value) = self else { return nil }
-        return value
-      }
-      set {
-        guard case .counter = self, let newValue = newValue else { return }
-        self = .counter(newValue)
-      }
+        get {
+            guard case let .counter(value) = self else { return nil }
+            return value
+        }
+        set {
+            guard case .counter = self, let newValue = newValue else { return }
+            self = .counter(newValue)
+        }
     }
     
     var primeModal: PrimeModalAction? {
-      get {
-        guard case let .primeModal(value) = self else { return nil }
-        return value
-      }
-      set {
-        guard case .primeModal = self, let newValue = newValue else { return }
-        self = .primeModal(newValue)
-      }
+        get {
+            guard case let .primeModal(value) = self else { return nil }
+            return value
+        }
+        set {
+            guard case .primeModal = self, let newValue = newValue else { return }
+            self = .primeModal(newValue)
+        }
     }
     
     var favoritePrimes: FavoritPrimesAction? {
-      get {
-          guard case let .favoritePrimes(value) = self else { return nil }
-        return value
-      }
-      set {
-        guard case .favoritePrimes = self, let newValue = newValue else { return }
-        self = .favoritePrimes(newValue)
-      }
+        get {
+            guard case let .favoritePrimes(value) = self else { return nil }
+            return value
+        }
+        set {
+            guard case .favoritePrimes = self, let newValue = newValue else { return }
+            self = .favoritePrimes(newValue)
+        }
     }
 }
+
+
 
 
 func combine<Value, Action>(
@@ -152,16 +170,16 @@ struct EnumKeyPath<Root, Value> {
 
 
 func pullback<LocalValue, GlobalValue, LocalAction, GlobalAction>(
-  _ reducer: @escaping (inout LocalValue, LocalAction) -> Void,
-  value: WritableKeyPath<GlobalValue, LocalValue>,
-  action: WritableKeyPath<GlobalAction, LocalAction?>
+    _ reducer: @escaping (inout LocalValue, LocalAction) -> Void,
+    value: WritableKeyPath<GlobalValue, LocalValue>,
+    action: WritableKeyPath<GlobalAction, LocalAction?>
 ) -> (inout GlobalValue, GlobalAction) -> Void {
     
-  return { globalValue, globalAction in
-    guard let localAction = globalAction[keyPath: action] else { return }
-      // localAction 을 사용해 value 를 변경하는 reducer 실행
-    reducer(&globalValue[keyPath: value], localAction)
-  }
+    return { globalValue, globalAction in
+        guard let localAction = globalAction[keyPath: action] else { return }
+        // localAction 을 사용해 value 를 변경하는 reducer 실행
+        reducer(&globalValue[keyPath: value], localAction)
+    }
 }
 
 
@@ -397,9 +415,11 @@ func nthPrime(_ n: Int, callback: @escaping (Int?) -> Void) -> Void {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(store: Store(
-            initialValue: AppState(),
-            reducer: activityFeed(appReducer))
+        ContentView(
+            store: Store(
+                initialValue: AppState(),
+                reducer: logging(activityFeed(appReducer))
+            )
         )
     }
 }
