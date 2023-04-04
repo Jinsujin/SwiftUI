@@ -92,7 +92,19 @@ enum AppAction {
     case counter(CounterAction)
     case primeModal(PrimeModalAction)
     case favoritePrimes(FavoritPrimesAction)
+    
+    var counter: CounterAction? {
+      get {
+        guard case let .counter(value) = self else { return nil }
+        return value
+      }
+      set {
+        guard case .counter = self, let newValue = newValue else { return }
+        self = .counter(newValue)
+      }
+    }
 }
+
 
 func combine<Value, Action>(
     _ reducers: (inout Value, Action) -> Void...
@@ -104,13 +116,29 @@ func combine<Value, Action>(
     }
 }
 
-// LocalValue -> GlobalValue
-func pullback<LocalValue, GlobalValue, Action>(
-  _ reducer: @escaping (inout LocalValue, Action) -> Void,
-  value: WritableKeyPath<GlobalValue, LocalValue>
-) -> (inout GlobalValue, Action) -> Void {
-  return { globalValue, action in
-    reducer(&globalValue[keyPath: value], action)
+
+struct _KeyPath<Root, Value> {
+    let get: (Root) -> Value
+    let set: (inout Root, Value) -> Void
+}
+
+
+struct EnumKeyPath<Root, Value> {
+    let embed: (Value) -> Root
+    let extract: (Root) -> Value?
+}
+
+
+func pullback<LocalValue, GlobalValue, LocalAction, GlobalAction>(
+  _ reducer: @escaping (inout LocalValue, LocalAction) -> Void,
+  value: WritableKeyPath<GlobalValue, LocalValue>,
+  action: WritableKeyPath<GlobalAction, LocalAction?>
+) -> (inout GlobalValue, GlobalAction) -> Void {
+    
+  return { globalValue, globalAction in
+    guard let localAction = globalAction[keyPath: action] else { return }
+      // localAction 을 사용해 value 를 변경하는 reducer 실행
+    reducer(&globalValue[keyPath: value], localAction)
   }
 }
 
@@ -136,22 +164,20 @@ extension AppState {
 }
 
 let _appReducer = combine(
-    pullback(counterReducer, value: \.count),
+    pullback(counterReducer, value: \.count, action: \.counter),
     primeModalReducer,
-    pullback(favoritePrimesReducer, value: \.favoritePrimesState)
+    pullback(favoritePrimesReducer, value: \.favoritePrimesState, action: \.self)
 )
 
-let appReducer = pullback(_appReducer, value: \.self)
+let appReducer = pullback(_appReducer, value: \.self, action: \.self)
 
 
-func counterReducer(state: inout Int, action: AppAction) {
+func counterReducer(state: inout Int, action: CounterAction) {
     switch action {
-    case .counter(.decrTapped):
+    case .decrTapped:
         state -= 1
-    case .counter(.incrTapped):
+    case .incrTapped:
         state += 1
-    default:
-        break
     }
 }
 
