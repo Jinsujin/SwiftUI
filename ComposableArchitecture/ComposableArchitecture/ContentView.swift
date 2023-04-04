@@ -103,6 +103,17 @@ enum AppAction {
         self = .counter(newValue)
       }
     }
+    
+    var favoritePrimes: FavoritPrimesAction? {
+      get {
+          guard case let .favoritePrimes(value) = self else { return nil }
+        return value
+      }
+      set {
+        guard case .favoritePrimes = self, let newValue = newValue else { return }
+        self = .favoritePrimes(newValue)
+      }
+    }
 }
 
 
@@ -166,7 +177,7 @@ extension AppState {
 let _appReducer = combine(
     pullback(counterReducer, value: \.count, action: \.counter),
     primeModalReducer,
-    pullback(favoritePrimesReducer, value: \.favoritePrimesState, action: \.self)
+    pullback(favoritePrimesReducer, value: \.favoritePrimesState, action: \.favoritePrimes)
 )
 
 let appReducer = pullback(_appReducer, value: \.self, action: \.self)
@@ -196,16 +207,14 @@ func primeModalReducer(state: inout AppState, action: AppAction) {
 }
 
 
-func favoritePrimesReducer(state: inout FavoritePrimesState, action: AppAction) {
+func favoritePrimesReducer(state: inout FavoritePrimesState, action: FavoritPrimesAction) {
     switch action {
-    case let .favoritePrimes(.deleteFavoritePrimes(indexSet)):
+    case let .deleteFavoritePrimes(indexSet):
         for index in indexSet {
             let prime = state.favoritePrimes[index]
             state.favoritePrimes.remove(at: index)
             state.activityFeed.append(AppState.Activity(timestamp: Date(), type: .removedFavoritePrime(prime)))
         }
-    default:
-        break
     }
 }
 
