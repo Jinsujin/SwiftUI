@@ -59,10 +59,9 @@ struct AppState {
     }
 }
 
-// Store<AppState>
 final class Store<Value, Action>: ObservableObject {
     let reducer: (inout Value, Action) -> Void
-    @Published var value: Value
+    @Published private(set) var value: Value
     
     init(initialValue: Value, reducer: @escaping (inout Value, Action) -> Void) {
         self.reducer = reducer
@@ -71,10 +70,6 @@ final class Store<Value, Action>: ObservableObject {
     
     func send(_ action: Action) {
         self.reducer(&self.value, action)
-        //      print("Action: \(action)")
-        //      print("Value:")
-        //      dump(self.value)
-        //      print("---")
     }
 }
 
