@@ -114,11 +114,35 @@ func pullback<LocalValue, GlobalValue, Action>(
   }
 }
 
-let appReducer = combine(
+
+struct FavoritePrimesState {
+    var favoritePrimes: [Int]
+    var activityFeed: [AppState.Activity]
+}
+
+extension AppState {
+    var favoritePrimesState: FavoritePrimesState {
+        get {
+            FavoritePrimesState(
+                favoritePrimes: self.favoritePrimes,
+                activityFeed: self.activityFeed
+            )
+        }
+        set {
+            self.favoritePrimes = newValue.favoritePrimes
+            self.activityFeed = newValue.activityFeed
+        }
+    }
+}
+
+let _appReducer = combine(
     pullback(counterReducer, value: \.count),
     primeModalReducer,
-    favoritePrimesReducer
+    pullback(favoritePrimesReducer, value: \.favoritePrimesState)
 )
+
+let appReducer = pullback(_appReducer, value: \.self)
+
 
 func counterReducer(state: inout Int, action: AppAction) {
     switch action {
@@ -145,7 +169,8 @@ func primeModalReducer(state: inout AppState, action: AppAction) {
     }
 }
 
-func favoritePrimesReducer(state: inout AppState, action: AppAction) {
+
+func favoritePrimesReducer(state: inout FavoritePrimesState, action: AppAction) {
     switch action {
     case let .favoritePrimes(.deleteFavoritePrimes(indexSet)):
         for index in indexSet {
@@ -158,21 +183,6 @@ func favoritePrimesReducer(state: inout AppState, action: AppAction) {
     }
 }
 
-
-extension AppState {
-  var favoritePrimesState: FavoritePrimesState {
-    get {
-      FavoritePrimesState(
-        favoritePrimes: self.favoritePrimes,
-        activityFeed: self.activityFeed
-      )
-    }
-    set {
-      self.favoritePrimes = newValue.favoritePrimes
-      self.activityFeed = newValue.activityFeed
-    }
-  }
-}
 
 struct PrimeAlert: Identifiable {
     let prime: Int
@@ -281,12 +291,6 @@ struct WolframAlphaResult: Decodable {
             }
         }
     }
-}
-
-
-struct FavoritePrimesState {
-  var favoritePrimes: [Int]
-  var activityFeed: [AppState.Activity]
 }
 
 // MARK: - FavoritePrimesView
